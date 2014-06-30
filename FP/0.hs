@@ -68,9 +68,6 @@ either' i j k = case k of
                   Left l  -> i l
                   Right m -> j m
 
-pos :: Eq a => a -> [a] -> Int
-pos = undefined
-
 fstEven :: [Int] -> Int
 fstEven l
   | null l        = error "not found"
@@ -95,6 +92,31 @@ last'' l
   | l == []      = Nothing
   | tail l == [] = Just (head l)
   | otherwise    = last'' (tail l)
+
+pos :: (Eq a) => a -> [a] -> Int
+pos x []     = minBound::Int
+pos y (x:xs) = if x == y then 0 else 1 + pos y xs
+
+pos' :: (Eq a) => a -> [a] -> Maybe Int
+pos' x []     = Nothing
+pos' y (x:xs)
+  | x == y    = Just 0
+  | otherwise = do n <- pos' y xs
+                   return (1 + n)
+
+concat' :: [[a]] -> [a]
+concat' []     = []
+concat' (x:xs) = x ++ concat' xs
+
+double :: [a] -> [a]
+double []     = []
+double (x:xs) = [x, x] ++ double xs
+
+interleave :: [a] -> [a] -> [a]
+interleave [] [] = []
+interleave [] x          = x
+interleave x []          = x
+interleave (x:xs) (y:ys) = [x, y] ++ interleave xs ys
 
 -- SKI
 s :: a -> a
