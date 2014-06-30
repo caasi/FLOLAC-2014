@@ -188,6 +188,60 @@ insertAt x y []     = [y]
 insertAt 0 y ys     = y : ys
 insertAt x y (z:zs) = z : insertAt (x - 1) y zs
 
+-- User-Defined Inductive Datatypes
+
+-- 1.
+data ETree a = Tip a | Bin (ETree a) (ETree a)
+
+etree = (Bin (Tip 6)
+            (Bin (Tip 4)
+                 (Tip 2)))
+
+minET :: (Ord a) => ETree a -> a
+minET (Tip x)   = x
+minET (Bin l r) = min (minET l) (minET r)
+
+-- 2.
+data Tree a = Null | Node a (Tree a) (Tree a)
+
+tree = (Node 4 (Node 2 (Node 1 Null Null)
+                       (Node 3 Null Null))
+               (Node 6 (Node 5 Null Null)
+                       (Node 7 Null Null)))
+
+-- I don't know how to force an Integer to be an Int,
+-- and Integer is not bounded.
+minT :: (Ord a) => Tree a -> a
+minT (Node m Null Null) = m
+minT (Node m    l Null) = min m (minT l)
+minT (Node m Null    r) = min m (minT r)
+minT (Node m    l    r) = min m (min (minT l) (minT r))
+
+-- 3.
+mapT :: (a -> b) -> Tree a -> Tree b
+mapT f Null         = Null
+mapT f (Node m l r) = Node (f m) (mapT f l) (mapT f r)
+
+-- 4.
+flatten :: Tree a -> [a]
+flatten Null         = []
+flatten (Node m l r) = flatten l ++ [m] ++ flatten r
+
+-- 5.
+memberT :: (Ord a) => a -> Tree a -> Bool
+memberT x Null         = False
+memberT x (Node m l r)
+  | x == m    = True
+  | x < m     = memberT x l
+  | x > m     = memberT x r
+
+insertT :: (Ord a) => a -> Tree a -> Tree a
+insertT x Null = Node x Null Null
+insertT x (Node m l r)
+  | x == m = Node m l r
+  | x < m  = Node m (insertT x l) r
+  | x > m  = Node m l (insertT x r)
+
 -- SKI
 s :: a -> a
 s = \x -> x
