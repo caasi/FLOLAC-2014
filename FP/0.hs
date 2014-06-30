@@ -16,16 +16,20 @@ st3 = smaller 3
 infinity :: Int
 infinity  = infinity + 1
 
+-- Functions
+
+-- 1.
 three :: Int -> Int
 three x = 3
 
 even' :: Int -> Bool
 even' x = mod x 2 == 0
 
+-- 2.
 carea :: Double -> Double
 carea r = 22 / 7 * r * r
 
-
+-- 6.
 f :: Int -> Char
 f = undefined
 
@@ -44,6 +48,9 @@ y = undefined
 c :: Char
 c = undefined
 
+-- Products and Sums
+
+-- 2.
 swap :: (a, b) -> (b, a)
 swap (x, y) = (y, x)
 
@@ -56,6 +63,7 @@ swap'' = \x -> case x of (a, b) -> (b, a)
 swap''' :: (a, b) -> (b, a)
 swap''' = \(a, b) -> (b, a)
 
+-- 3.
 half :: Int -> Either Int Int
 half x
   | even x = Left h
@@ -63,36 +71,42 @@ half x
   where
     h = div x 2
 
+-- 4.
 either' :: (t0 -> t) -> (t1 -> t) -> Either t0 t1 -> t
 either' i j k = case k of
                   Left l  -> i l
                   Right m -> j m
 
+-- Inductively Defined Functions on Lists
+
+-- 1.
 fstEven :: [Int] -> Int
 fstEven l
   | null l        = error "not found"
   | even (head l) = head l
   | otherwise     = fstEven (tail l)
 
+-- 2.
 hasZero :: [Int] -> Bool
 hasZero l
   | null l      = error "not found"
   | head l == 0 = True
   | otherwise   = hasZero (tail l)
 
+-- 3.
 last' :: [a] -> Maybe a
 last' l
   | null l        = Nothing
   | null (tail l) = Just (head l)
   | otherwise     = last' (tail l)
 
--- why a have to be a member of Eq?
 last'' :: (Eq a) => [a] -> Maybe a
 last'' l
   | l == []      = Nothing
   | tail l == [] = Just (head l)
   | otherwise    = last'' (tail l)
 
+-- 4.
 pos :: (Eq a) => a -> [a] -> Int
 pos x []     = minBound::Int
 pos y (x:xs) = if x == y then 0 else 1 + pos y xs
@@ -104,20 +118,24 @@ pos' y (x:xs)
   | otherwise = do n <- pos' y xs
                    return (1 + n)
 
+-- 5.
 concat' :: [[a]] -> [a]
 concat' []     = []
 concat' (x:xs) = x ++ concat' xs
 
+-- 6.
 double :: [a] -> [a]
 double []     = []
 double (x:xs) = [x, x] ++ double xs
 
+-- 7.
 interleave :: [a] -> [a] -> [a]
 interleave [] []         = []
 interleave [] x          = x
 interleave x []          = x
 interleave (x:xs) (y:ys) = [x, y] ++ interleave xs ys
 
+-- 8.
 splitLR :: [Either a b] -> ([a], [b])
 splitLR []      = ([], [])
 splitLR (x:xs)  = either f g x
@@ -126,14 +144,17 @@ splitLR (x:xs)  = either f g x
     g = \x -> (fst splitted, x : snd splitted)
     splitted = splitLR xs
 
+-- 9.
 fan :: a -> [a] -> [[a]]
 fan x []     = [[x]]
 fan x l@(y:ys) = (x : l) : map (y:) (fan x ys)
 
+-- 10.
 perms :: [a] -> [[a]]
 perms []     = [[]]
 perms (x:xs) = foldl1 (++) (map (\ys -> fan x ys) (perms xs))
 
+-- 11.
 inits :: [a] -> [[a]]
 inits []   = [[]]
 inits list = inits (init list) ++ [list]
@@ -141,6 +162,31 @@ inits list = inits (init list) ++ [list]
 tails :: [a] -> [[a]]
 tails [] = [[]]
 tails l@(x:xs) = l : tails xs
+
+-- Inductively Defined Functions on Natural Numbers
+
+-- 1.
+mul :: Int -> Int -> Int
+mul x 0 = 0
+mul x y = x + mul x (y - 1)
+
+-- 2.
+min' :: Int -> Int -> Int
+min' x 0 = 0
+min' 0 x = 0
+min' x y = 1 + min' (x - 1) (y - 1)
+
+-- 3.
+elemAt :: Int -> [a] -> a
+elemAt x []     = error "index too large"
+elemAt 0 (y:ys) = y
+elemAt x (y:ys) = elemAt (x - 1) ys
+
+-- 4.
+insertAt :: Int -> a -> [a] -> [a]
+insertAt x y []     = [y]
+insertAt 0 y ys     = y : ys
+insertAt x y (z:zs) = z : insertAt (x - 1) y zs
 
 -- SKI
 s :: a -> a
