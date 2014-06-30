@@ -113,10 +113,34 @@ double []     = []
 double (x:xs) = [x, x] ++ double xs
 
 interleave :: [a] -> [a] -> [a]
-interleave [] [] = []
+interleave [] []         = []
 interleave [] x          = x
 interleave x []          = x
 interleave (x:xs) (y:ys) = [x, y] ++ interleave xs ys
+
+splitLR :: [Either a b] -> ([a], [b])
+splitLR []      = ([], [])
+splitLR (x:xs)  = either f g x
+  where
+    f = \x -> (x : fst splitted, snd splitted)
+    g = \x -> (fst splitted, x : snd splitted)
+    splitted = splitLR xs
+
+fan :: a -> [a] -> [[a]]
+fan x []     = [[x]]
+fan x l@(y:ys) = (x : l) : map (y:) (fan x ys)
+
+perms :: [a] -> [[a]]
+perms []     = [[]]
+perms (x:xs) = foldl1 (++) (map (\ys -> fan x ys) (perms xs))
+
+inits :: [a] -> [[a]]
+inits []   = [[]]
+inits list = inits (init list) ++ [list]
+
+tails :: [a] -> [[a]]
+tails [] = [[]]
+tails l@(x:xs) = l : tails xs
 
 -- SKI
 s :: a -> a
