@@ -1,3 +1,5 @@
+-- {-# LANGUAGE ScopedTypeVariables #-}
+
 twice :: (a -> a) -> (a -> a)
 twice f = f . f
 
@@ -209,8 +211,6 @@ tree = (Node 4 (Node 2 (Node 1 Null Null)
                (Node 6 (Node 5 Null Null)
                        (Node 7 Null Null)))
 
--- I don't know how to force an Integer to be an Int,
--- and Integer is not bounded.
 minT :: (Ord a) => Tree a -> a
 minT (Node m Null Null) = m
 minT (Node m    l Null) = min m (minT l)
