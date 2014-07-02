@@ -1,7 +1,7 @@
 # Commercial Uses of Functional Programming
 
-講者：au
-投影片：http://tinyurl.com/flolac
+* 講者：au
+* 投影片：http://tinyurl.com/flolac
 
 ## Notes
 
