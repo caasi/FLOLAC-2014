@@ -106,8 +106,8 @@ ex4 = λ {A} {B} {C} z z₁ z₂ → z z₂ (z₁ z₂)
 -- list is [] or not.
 
 null : ∀ {A} → List A → Bool
-null [] = false
-null xs = true
+null [] = true
+null xs = false
 
    -- ∀ {A} is a shorter syntax for 
    --  {A : τ} when τ can be inferred.
@@ -150,7 +150,7 @@ ex true = true
 data ⊤ : Set where    -- data Top = TT
    tt : ⊤
 
-data ⊥ : Set where    
+data ⊥ : Set where
 
 IsTrue : Bool → Set
 IsTrue false = ⊥
@@ -166,19 +166,21 @@ IsTrue true  = ⊤
 
 headOk : ∀ {A} → (xs : List A) → (IsTrue (not (null xs))) → A
 headOk [] ()
-headOk (x ∷ xs) p = ?
+headOk (x ∷ xs) _ = x
 
    --- ..... headOk [] (...) ...
 
 {- * Use headOk to extract the first component of ex1 -}
 
 headex1 : ℕ
-headex1 = {!!}  
+headex1 = headOk ex1 _
 
 {- * Can you apply headOk to []? How, or why not? -}
 
-last : ∀ {A} → (xs : List A) → IsTrue (not (null xs)) → A
-last xs p = {!!}
+last : ∀ {A} → (xs : List A) → (IsTrue (not (null xs))) → A
+last [] ()
+last (x ∷ []) _ = x
+last (x ∷ xs) _ = last xs _
 
 -- a more complex example
 
@@ -187,20 +189,24 @@ true ∨ _ = true
 false ∨ b = b
 
 _∧_ : Bool → Bool → Bool
-b ∧ c = {!!}
+b ∧ c = not ((not b) ∨ (not c))
 
 somewhere : ∀ {A} → (A → Bool) → List A → Bool
 somewhere p [] = false
 somewhere p (x ∷ xs) = p x ∨ somewhere p xs
 
 find1st : ∀{A} → (p : A → Bool) → (xs : List A) →
-           IsTrue (somewhere p xs) → A 
-find1st p xs q = {!!}
+           IsTrue (somewhere p xs) → A
+find1st _ [] ()
+find1st p (x ∷ xs) _ = ? -- if p x then x else find1st p xs _
 
 -- Equality for ℕ
 
 _==_ : ℕ → ℕ → Bool
-m == n = {!!}
+zero == zero = true
+zero == _ = false
+_ == zero = false
+(suc m) == (suc n) = m == n
 
 -- Less-than-or-equal-to for ℕ
 
@@ -210,7 +216,8 @@ suc m ≤ zero = false
 suc m ≤ suc n = m ≤ n
 
 _<_ : ℕ → ℕ → Bool
-m < n = {!!}
+zero < zero = false
+m < n = m ≤ n
 
 -- lengths of lists
 
@@ -223,7 +230,10 @@ length (x ∷ xs) = suc (length xs)
     we call index xs n, we must have shown that n < length xs -}
 
 index : ∀ {A} → (xs : List A) → (n : ℕ) → IsTrue (n < length xs) → A
-index xs n = {!!}
+index = ?
+--index [] _ ()
+--index (x ∷ _) 0 _ = x
+--index (_ ∷ xs) (suc n) _ = index xs n _
 
 -- Pairs. 
 
