@@ -8,3 +8,14 @@ D. E. Knuth 的名言 “Beware of bugs in the above code; I have only proved it
 
 本次 FLOLAC 首度開課簡介依值型別編程這項尖端研究，以學界廣泛使用的依值型別語言 Agda 為例，讓大家搶先體驗新世界的編程工具！
 
+## Outline
+
+*   Introduction — Why Dependent Types?
+*   Syntax, Functions, Values, and Simple Usage of Dependent Types.
+    *   [1-Intro.agda](http://flolac.iis.sinica.edu.tw/flolac14/files/dtp/1-Intro.agda).
+    *   [2-DepTypes.agda](http://flolac.iis.sinica.edu.tw/flolac14/files/dtp/2-DepTypes.agda).
+*   Inductive Family.
+    *   [3-Vectors.agda](http://flolac.iis.sinica.edu.tw/flolac14/files/dtp/3-Vectors.agda).
+*   Exercise: Membership
+*   Example: Binomial Heaps
+
