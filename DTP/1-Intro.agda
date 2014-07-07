@@ -16,7 +16,7 @@ module 1-Intro where
 -- Not all things are the same. This
 -- gives us something to care about.
 
--- Haskell: 
+-- Haskell:
 --   data Bool = False | True
 
 data Bool : Set where
@@ -29,7 +29,7 @@ data Bool : Set where
 not : Bool → Bool
 not false = true
 not true  = false
-  
+
   -- The type could also be written
   --   not : (b : Bool) → Bool
 
@@ -98,7 +98,7 @@ ex2 = λ {A} {B} {C} z z₁ z₂ → z z₂ z₁
 ex3 : ∀ {A B C : Set} → (A → B) → (B → C) → A → C
 ex3 = λ {A} {B} {C} z z₁ z₂ → z₁ (z z₂)
 
-ex4 : ∀ {A B C : Set} → 
+ex4 : ∀ {A B C : Set} →
         (A → B → C) → (A → B) → A → C
 ex4 = λ {A} {B} {C} z z₁ z₂ → z z₂ (z₁ z₂)
 
@@ -109,7 +109,7 @@ null : ∀ {A} → List A → Bool
 null [] = true
 null xs = false
 
-   -- ∀ {A} is a shorter syntax for 
+   -- ∀ {A} is a shorter syntax for
    --  {A : τ} when τ can be inferred.
    -- ∀ A is a shorter synatx for
    --  (A : τ) when τ can be inferred.
@@ -121,11 +121,11 @@ head : ∀ {A} → List A → A
 head (x ∷ xs) = x
 -}
 
-{- * xs ‼ n intendes to extract the nth element of xs. 
-     The intention is, for example, 
+{- * xs ‼ n intendes to extract the nth element of xs.
+     The intention is, for example,
          (1 ∷ 2 ∷ 3 ∷ []) ‼ 1  =  2
-    (There is a correesponding definition in Haskell called (!!)). 
-    Try completing the definition. 
+    (There is a correesponding definition in Haskell called (!!)).
+    Try completing the definition.
 
 _‼_ : ∀ {A} → List A → ℕ → A
 xs ‼ n = ?
@@ -180,7 +180,11 @@ headex1 = headOk ex1 _
 last : ∀ {A} → (xs : List A) → (IsTrue (not (null xs))) → A
 last [] ()
 last (x ∷ []) _ = x
-last (x ∷ xs) _ = last xs _
+-- what the value of p?
+-- and why can I just write:
+--   last (x ∷ xs) p = last xs p
+--   last (x ∷ xs) _ = last xs _
+last (x ∷ y ∷ xs) p = last (y ∷ xs) p
 
 -- a more complex example
 
@@ -198,7 +202,9 @@ somewhere p (x ∷ xs) = p x ∨ somewhere p xs
 find1st : ∀{A} → (p : A → Bool) → (xs : List A) →
            IsTrue (somewhere p xs) → A
 find1st _ [] ()
-find1st p (x ∷ xs) _ = ? -- if p x then x else find1st p xs _
+find1st p (x ∷ xs) q with p x
+... | false = find1st p xs q
+... | true = x
 
 -- Equality for ℕ
 
@@ -217,25 +223,28 @@ suc m ≤ suc n = m ≤ n
 
 _<_ : ℕ → ℕ → Bool
 zero < zero = false
-m < n = m ≤ n
+zero < n = true
+m < zero = false
+suc m < suc n = m < n
+
 
 -- lengths of lists
 
 length : ∀ {A} → List A → ℕ
 length [] = zero
-length (x ∷ xs) = suc (length xs) 
+length (x ∷ xs) = suc (length xs)
 
 
  {- This is a safe version of _‼_, in which we demand that, whenever
     we call index xs n, we must have shown that n < length xs -}
 
 index : ∀ {A} → (xs : List A) → (n : ℕ) → IsTrue (n < length xs) → A
-index = ?
---index [] _ ()
---index (x ∷ _) 0 _ = x
---index (_ ∷ xs) (suc n) _ = index xs n _
+index [] zero ()
+index [] (suc n) ()
+index (x ∷ _) zero _ = x
+index (x ∷ xs) (suc n) p = index xs n p
 
--- Pairs. 
+-- Pairs.
 
 data _×_ (A B : Set) : Set where
   _,_ : A → B → A × B
@@ -246,25 +255,27 @@ fst (x , y) = x
 snd : ∀ {A B} → A × B → B
 snd (x , y) = y
 
-ex5 : {!!}  -- what is the type of ex2?
+ex5 : (ℕ × Bool) × Bool  -- what is the type of ex2?
 ex5 = ((2 , true), false)
 
 {- * Extract the components 2, true, and false in ex2,
      using fst, snd, etc -}
 
 {- Define zip such that, for example,
- 
+
      zip (1 ∷ 2 ∷ 3 ∷ []) (true ∷ false ∷ true ∷ []) =
         (1 , true) ∷ (2 , false) ∷ (3 , true) ∷ []
 
    When the two lists are not equally long, the longer
-   one is truncated. 
+   one is truncated.
 
      zip (1 ∷ 2 ∷ []) (true ∷ false ∷ true ∷ []) =
         (1 , true) ∷ (2 , false) ∷ []
 -}
 zip : ∀ {A B} → (xs : List A) → (ys : List B) → List (A × B)
-zip xs ys = {!!} 
+zip xs [] = []
+zip [] ys = []
+zip (x ∷ xs) (y ∷ ys) = x , y ∷ zip xs ys
 
 {- The following function zip= is like zip, but insisting
    that the two arguments must have the same length -}
