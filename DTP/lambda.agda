@@ -7,14 +7,16 @@ module lambda where
 --------------------------------------------
 -- reference: http://en.wikipedia.org/wiki/Lambda_calculus
 
--- More hints and information from Dr. Shin-Cheng Mu:
-  -- Chruch encoding
+-- More hints and information from Dr. Shin-Cheng Mu(scm):
+  -- Church encoding / Church numeral
+    -- reference http://en.wikipedia.org/wiki/Church_numeral
+    -- type Church a = (a -> a) -> a -> a
   -- polymorphic lambda calculus
 
 data ⊤ : Set where
   tt : ⊤
 
--- Dr. Mu:
+-- scm:
   -- ∀ {a} → (a → a) → a → a
   -- newtype ℕ = N (∀ a . (a -> a) -> (a -> a)) in Haskell
 
@@ -38,7 +40,7 @@ mult m n f = m (n f)
 pow : ⊤ → (⊤ → ⊤) → ⊤
 pow b e = e b
 
--- Dr. Mu:
+-- scm:
   -- ∀ a . a → a
   -- ∀ a . a → a → a
 
@@ -51,7 +53,7 @@ false x y = y
 
 -- don't know how to construct 'and', 'or' without apply their own variables
 
--- Dr. Mu:
+-- scm:
   -- Pair A B = ∀ {c} → (A → B → c) → c
 
 pair : ⊤ → ⊤ → (⊤ → ⊤ → ⊤) → ⊤
@@ -66,5 +68,5 @@ second p = p false
 nil : ⊤ → (⊤ → ⊤ → ⊤)
 nil x = true
 
--- Dr. Mu:
+-- scm:
   -- A + B = ∀ {c} → (A → c) → (B → c) → c
